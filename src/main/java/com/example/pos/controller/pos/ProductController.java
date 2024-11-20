@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
@@ -19,6 +21,11 @@ public class ProductController {
         return productService.createProduct(productDTO);
     }
 
+    @GetMapping("/all")
+    public List<ProductDTO> getAllProducts() {
+        return productService.getAllProduct();
+    }
+
     @DeleteMapping("/delete/{id}")
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
@@ -28,4 +35,6 @@ public class ProductController {
     public ProductDTO updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
         return productService.updateProduct(id, productDTO);
     }
+
+
 }

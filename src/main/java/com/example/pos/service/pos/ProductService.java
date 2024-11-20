@@ -10,6 +10,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.pos.model.pos.QProduct.product;
 
@@ -40,37 +41,50 @@ public class ProductService {
                 .build();
     }
 
+    public List<ProductDTO> getAllProduct() {
+        return queryFactory.selectFrom(product)
+                .fetch()
+                .stream()
+                .map(p -> ProductDTO.builder()
+                        .productId(p.getProductId())
+                        .productName(p.getProductName())
+                        .productPrice(p.getProductPrice())
+                        .stockQuantity(p.getStockQuantity())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 
     // 상품 삭제
     public void deleteProduct(Long productId) {
-        Product exsitingProduct = queryFactory
+        Product existingProduct = queryFactory
                 .selectFrom(product)
                 .where(product.productId.eq(productId))
                 .fetchOne();
 
-        if (exsitingProduct == null) {
+        if (existingProduct == null) {
             throw new IllegalArgumentException("상품을 찾을 수 없습니다.");
         }
 
-        productRepository.delete(exsitingProduct);
+        productRepository.delete(existingProduct);
     }
 
     // 상품 수정
     public ProductDTO updateProduct(Long productId, ProductDTO productDTO) {
-        Product exsitingProduct = queryFactory.selectFrom(product)
+        Product existingProduct = queryFactory.selectFrom(product)
                 .where(product.productId.eq(productId))
                 .fetchOne();
 
-        if (exsitingProduct == null) {
+        if (existingProduct == null) {
             throw new IllegalArgumentException("상품을 찾을 수 없습니다.");
         }
 
 
-        exsitingProduct.setProductName(productDTO.getProductName());
-        exsitingProduct.setProductPrice(productDTO.getProductPrice());
-        exsitingProduct.setStockQuantity(productDTO.getStockQuantity());
+        existingProduct.setProductName(productDTO.getProductName());
+        existingProduct.setProductPrice(productDTO.getProductPrice());
+        existingProduct.setStockQuantity(productDTO.getStockQuantity());
 
-        Product updateProduct = productRepository.save(exsitingProduct);
+        Product updateProduct = productRepository.save(existingProduct);
 
         return ProductDTO.builder()
                 .productId(updateProduct.getProductId())
@@ -79,6 +93,8 @@ public class ProductService {
                 .stockQuantity(updateProduct.getStockQuantity())
                 .build();
     }
+
+
 
 
 }

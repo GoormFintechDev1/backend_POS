@@ -31,7 +31,7 @@ public class OrderService {
     private final JPAQueryFactory queryFactory;
 
 
-    // 주문 생성 
+    // 주문 생성
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO) {
         List<OrderItem> orderItems = orderRequestDTO.getOrderItems().stream()
                 .map(item -> {
@@ -84,4 +84,7 @@ public class OrderService {
                         .collect(Collectors.toList()))
                 .build();
     }
+
+    // 주문 조회
+
 }
