@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.example.pos.model.pos.QOrder.order;
 import static com.example.pos.model.pos.QProduct.product;
 
 @Service
@@ -86,5 +87,25 @@ public class OrderService {
     }
 
     // 주문 조회
+    @Transactional(readOnly = true)
+    public List<OrderResponseDTO> getAllOrders() {
+        return queryFactory.selectFrom(order)
+                .fetch()
+                .stream()
+                .map(o -> OrderResponseDTO.builder()
+                        .orderId(o.getOrderId())
+                        .totalPrice(o.getTotalPrice())
+                        .orderStatus(o.getOrderStatus().name())
+                        .paymentStatus(o.getPaymentStatus().name())
+                        .orderItems(o.getOrderItems().stream()
+                                .map(item -> OrderItemDTO.builder()
+                                        .productId(item.getProduct().getProductId())
+                                        .quantity(item.getQuantity())
+                                        .build())
+                                .collect(Collectors.toList()))
+                        .build())
+                .collect(Collectors.toList());
+
+    }
 
 }
