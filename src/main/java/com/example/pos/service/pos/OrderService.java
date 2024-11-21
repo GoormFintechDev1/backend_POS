@@ -66,6 +66,10 @@ public class OrderService {
                 .paymentStatus(PaymentStatus.PENDING)
                 .build();
 
+        for (OrderItem orderItem : orderItems) {
+            orderItem.setOrder(order);
+        }
+
         order = orderRepository.save(order);
 
         return OrderResponseDTO.builder()
