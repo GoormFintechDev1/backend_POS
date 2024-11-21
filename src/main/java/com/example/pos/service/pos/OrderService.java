@@ -3,6 +3,7 @@ package com.example.pos.service.pos;
 import com.example.pos.dto.pos.OrderItemDTO;
 import com.example.pos.dto.pos.OrderRequestDTO;
 import com.example.pos.dto.pos.OrderResponseDTO;
+import com.example.pos.dto.pos.SalesReportDTO;
 import com.example.pos.model.enumset.OrderStatus;
 import com.example.pos.model.enumset.PaymentStatus;
 import com.example.pos.model.pos.Order;
@@ -44,11 +45,6 @@ public class OrderService {
                         throw new IllegalArgumentException("상품을 찾을 수 없습니다.");
                     }
 
-                    if (productEntity.getStockQuantity() < item.getQuantity()) {
-                        throw new IllegalArgumentException("재고가 부족합니다.");
-                    }
-
-                    productEntity.setStockQuantity(productEntity.getStockQuantity() - item.getQuantity());
 
                     return OrderItem.builder()
                             .product(productEntity)
@@ -86,7 +82,7 @@ public class OrderService {
                 .build();
     }
 
-    // 주문 조회
+    // 모든 주문 조회
     @Transactional(readOnly = true)
     public List<OrderResponseDTO> getAllOrders() {
         return queryFactory.selectFrom(order)
@@ -105,7 +101,10 @@ public class OrderService {
                                 .collect(Collectors.toList()))
                         .build())
                 .collect(Collectors.toList());
-
     }
-
 }
+
+
+
+
+

@@ -20,8 +20,6 @@ public class QOrder extends EntityPathBase<Order> {
 
     public static final QOrder order = new QOrder("order1");
 
-    public final StringPath customerName = createString("customerName");
-
     public final DateTimePath<java.time.LocalDateTime> orderDate = createDateTime("orderDate", java.time.LocalDateTime.class);
 
     public final NumberPath<Long> orderId = createNumber("orderId", Long.class);

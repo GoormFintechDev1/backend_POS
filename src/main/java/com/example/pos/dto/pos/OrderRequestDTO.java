@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class OrderRequestDTO {
-    private String customerName;
+    private Long orderId;
     private List<OrderItemDTO> orderItems;
 
 }

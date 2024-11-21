@@ -27,9 +27,6 @@ public class Order {
     @Column(name = "order_date", nullable = false)
     private LocalDateTime orderDate;
 
-    @Column(name = "customer_name", nullable = false)
-    private String customerName;
-
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
@@ -41,7 +38,7 @@ public class Order {
     private OrderStatus orderStatus; // 주문 상태
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "paymetn_status", nullable = false)
+    @Column(name = "payment_status", nullable = false)
     private PaymentStatus paymentStatus; // 결제 상태
 
 
