@@ -1,17 +1,13 @@
 package com.example.pos.dto.pg;
 
 import lombok.*;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Data
 public class PaymentRequestDTO {
-    public Long orderId;
+    private String orderId;
+    private String paymentKey;
     private int amount;
-    private String orderName;
-    private String customerName;
-    private String successUrl;
-    private String failUrl;
 }
