@@ -4,7 +4,6 @@ package com.example.pos.controller.pos;
 import com.example.pos.dto.pos.ProductDTO;
 import com.example.pos.service.pos.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
