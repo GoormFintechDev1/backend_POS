@@ -11,5 +11,4 @@ public class ProductDTO {
     private Long productId;
     private String productName;
     private int productPrice;
-    private int stockQuantity;
 }

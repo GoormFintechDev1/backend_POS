@@ -1,9 +1,6 @@
 package com.example.pos.model.pos;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -18,10 +15,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
 
+    @Column(name = "product_name", nullable = false)
     private String productName;
 
+    @Column(name = "product_price", nullable = false)
     private int productPrice;
-
-    private int stockQuantity;
 
 }

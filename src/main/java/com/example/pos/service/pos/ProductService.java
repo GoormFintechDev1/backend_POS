@@ -27,7 +27,6 @@ public class ProductService {
         Product productEntity = Product.builder()
                 .productName(productDTO.getProductName())
                 .productPrice(productDTO.getProductPrice())
-                .stockQuantity(productDTO.getStockQuantity())
                 .build();
 
         Product savedProduct = productRepository.save(productEntity);
@@ -36,10 +35,10 @@ public class ProductService {
                 .productId(savedProduct.getProductId())
                 .productName(savedProduct.getProductName())
                 .productPrice(savedProduct.getProductPrice())
-                .stockQuantity(savedProduct.getStockQuantity())
                 .build();
     }
 
+    // 상품 조회
     public List<ProductDTO> getAllProduct() {
         return queryFactory.selectFrom(product)
                 .fetch()
@@ -48,7 +47,6 @@ public class ProductService {
                         .productId(p.getProductId())
                         .productName(p.getProductName())
                         .productPrice(p.getProductPrice())
-                        .stockQuantity(p.getStockQuantity())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -81,7 +79,6 @@ public class ProductService {
 
         existingProduct.setProductName(productDTO.getProductName());
         existingProduct.setProductPrice(productDTO.getProductPrice());
-        existingProduct.setStockQuantity(productDTO.getStockQuantity());
 
         Product updateProduct = productRepository.save(existingProduct);
 
@@ -89,7 +86,6 @@ public class ProductService {
                 .productId(updateProduct.getProductId())
                 .productName(updateProduct.getProductName())
                 .productPrice(updateProduct.getProductPrice())
-                .stockQuantity(updateProduct.getStockQuantity())
                 .build();
     }
 
