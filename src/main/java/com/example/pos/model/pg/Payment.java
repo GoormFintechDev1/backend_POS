@@ -1,6 +1,6 @@
 package com.example.pos.model.pg;
 
-import com.example.pos.model.enumset.PaymentStatus;
+import com.example.pos.model.enumset.PayType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,24 +16,28 @@ public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "payment_id", nullable = false, unique = true)
+    private Long paymentId;
 
-    @Column(nullable = false)
-    private String orderId;
+    private String paymentKey; // 결제 키
+    private String orderId; // 주문 ID
+    private String orderName; // 주문 이름
+    private String requestedAt; // 결제 요청 시간
+    private String approvedAt; // 결제 승인 시간
 
-    @Column(nullable = false)
-    private int amount;
+    private String provider; // 간편결제 제공자
+    private Long easyPayAmount; // 간편결제 금액
+    private Long easyPayDiscountAmount; // 간편결제 할인 금액
 
-    @Column(nullable = false)
-    private String paymentKey;
+    private String currency; // 통화 정보
+    private Long totalAmount; // 총 결제 금액
+    private Long vat; // 부가세
 
-    @Column(nullable = false)
+    private String method; // 결제 방식 (ex. 카드, 간편결제 등)
+    private boolean paySuccessYN; // 결제 성공 여부
+
     @Enumerated(EnumType.STRING)
-    private PaymentStatus status; // APPROVED, FAILED
+    private PayType payType; // 결제 타입 (카드, 현금 등)
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    private LocalDateTime approvedAt; // 승인된 시간
-
+    private LocalDateTime createdAt; // 생성 시간
 }

@@ -19,19 +19,37 @@ public class QPayment extends EntityPathBase<Payment> {
 
     public static final QPayment payment = new QPayment("payment");
 
-    public final NumberPath<Integer> amount = createNumber("amount", Integer.class);
-
-    public final DateTimePath<java.time.LocalDateTime> approvedAt = createDateTime("approvedAt", java.time.LocalDateTime.class);
+    public final StringPath approvedAt = createString("approvedAt");
 
     public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final StringPath currency = createString("currency");
+
+    public final NumberPath<Long> easyPayAmount = createNumber("easyPayAmount", Long.class);
+
+    public final NumberPath<Long> easyPayDiscountAmount = createNumber("easyPayDiscountAmount", Long.class);
+
+    public final StringPath method = createString("method");
 
     public final StringPath orderId = createString("orderId");
 
+    public final StringPath orderName = createString("orderName");
+
+    public final NumberPath<Long> paymentId = createNumber("paymentId", Long.class);
+
     public final StringPath paymentKey = createString("paymentKey");
 
-    public final EnumPath<com.example.pos.model.enumset.PaymentStatus> status = createEnum("status", com.example.pos.model.enumset.PaymentStatus.class);
+    public final BooleanPath paySuccessYN = createBoolean("paySuccessYN");
+
+    public final EnumPath<com.example.pos.model.enumset.PayType> payType = createEnum("payType", com.example.pos.model.enumset.PayType.class);
+
+    public final StringPath provider = createString("provider");
+
+    public final StringPath requestedAt = createString("requestedAt");
+
+    public final NumberPath<Long> totalAmount = createNumber("totalAmount", Long.class);
+
+    public final NumberPath<Long> vat = createNumber("vat", Long.class);
 
     public QPayment(String variable) {
         super(Payment.class, forVariable(variable));
