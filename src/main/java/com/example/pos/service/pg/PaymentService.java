@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.InputStream;
@@ -23,8 +24,10 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +39,30 @@ public class PaymentService {
     private final RedisTemplate<String, String> StringRedisTemplate;
     private final PaymentRepository paymentRepository;
     private final ObjectMapper objectMapper;
+
+    public List<PaymentResponseDTO> getPaymentsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        List<Payment> payments = paymentRepository.findAllByCreatedAtBetween(startDate, endDate);
+
+        return payments.stream()
+                .map(payment -> PaymentResponseDTO.builder()
+                        .paymentKey(payment.getPaymentKey())
+                        .orderId(payment.getOrderId())
+                        .orderName(payment.getOrderName())
+                        .requestedAt(payment.getRequestedAt())
+                        .approvedAt(payment.getApprovedAt())
+                        .provider(payment.getProvider())
+                        .easyPayAmount(payment.getEasyPayAmount())
+                        .easyPayDiscountAmount(payment.getEasyPayDiscountAmount())
+                        .currency(payment.getCurrency())
+                        .totalAmount(payment.getTotalAmount())
+                        .vat(payment.getVat())
+                        .method(payment.getMethod())
+                        .failReason(payment.isPaySuccessYN() ? null : "Payment failed")
+                        .mId(null) // Merchant ID (필요 시 설정)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 
 
 
@@ -172,44 +199,6 @@ public class PaymentService {
         redisTemplate.delete(redisKey);
     }
 
-
-//    public ResponseEntity<JSONObject> confirmPayment(@RequestBody PaymentRequestDTO requestDTO) throws Exception {
-//
-//        // 결제 승인 요청 데이터 준비
-//        JSONObject obj = new JSONObject();
-//        obj.put("orderId", requestDTO.getOrderId());
-//        obj.put("amount", requestDTO.getAmount());
-////        obj.put("paymentKey", requestDTO.getPaymentKey());
-//
-//        // 토스페이먼츠 API 인증 헤더 생성
-//        String widgetSecretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
-//        Base64.Encoder encoder = Base64.getEncoder();
-//        byte[] encodedBytes = encoder.encode((widgetSecretKey + ":").getBytes(StandardCharsets.UTF_8));
-//        String authorizations = "Basic " + new String(encodedBytes);
-//
-//        // HTTP 연결 설정
-//        URL url = new URL("https://api.tosspayments.com/v1/payments/confirm");
-//        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//        connection.setRequestProperty("Authorization", authorizations);
-//        connection.setRequestProperty("Content-Type", "application/json");
-//        connection.setRequestMethod("POST");
-//        connection.setDoOutput(true);
-//
-//        // 요청 데이터 전송
-//        try (OutputStream outputStream = connection.getOutputStream()) {
-//            outputStream.write(obj.toString().getBytes(StandardCharsets.UTF_8));
-//        }
-//
-//        // 응답 코드 확인
-//        int code = connection.getResponseCode();
-//        InputStream responseStream = code == 200 ? connection.getInputStream() : connection.getErrorStream();
-//
-//        // JSON 응답 파싱
-//        JSONObject responseJson = objectMapper.readValue(responseStream, JSONObject.class);
-//
-//        // 응답 반환
-//        return ResponseEntity.status(code).body(responseJson);
-//    }
 
 
 }

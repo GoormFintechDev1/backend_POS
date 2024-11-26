@@ -30,3 +30,8 @@ logging:
     root: INFO
     org.hibernate.SQL: DEBUG
 
+bank:
+  api:
+    url:
+      orders: http://localhost:8083/api/bank-transfer/orders
+      payments: http://localhost:8083/api/bank-transfer/payments

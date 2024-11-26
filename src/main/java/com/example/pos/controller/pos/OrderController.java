@@ -1,5 +1,6 @@
 package com.example.pos.controller.pos;
 
+import com.example.pos.dto.pg.DateRangeRequestDTO;
 import com.example.pos.dto.pos.OrderRequestDTO;
 import com.example.pos.dto.pos.OrderResponseDTO;
 import com.example.pos.service.pos.OrderService;
@@ -24,4 +25,14 @@ public class OrderController {
         return orderService.getAllOrders();
     }
 
+    @PostMapping("/send")
+    public List<OrderResponseDTO> getOrdersByDateRange(
+            @RequestBody DateRangeRequestDTO dateRange) {
+        if (dateRange.getStartDate() == null || dateRange.getEndDate() == null
+                || dateRange.getStartDate().isAfter(dateRange.getEndDate())) {
+            throw new IllegalArgumentException("Invalid date range. Ensure startDate is before endDate.");
+        }
+
+        return orderService.getOrdersByDateRange(dateRange.getStartDate(), dateRange.getEndDate());
+    }
 }

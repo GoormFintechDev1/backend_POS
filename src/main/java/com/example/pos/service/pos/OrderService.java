@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.pos.model.pos.QOrder.order;
+import static com.example.pos.model.pos.QOrderItem.orderItem;
 import static com.example.pos.model.pos.QProduct.product;
 
 @Service
@@ -54,33 +55,51 @@ public class OrderService {
 
                 }).collect(Collectors.toList());
 
+        // 총 가격 계산
         int totalPrice = orderItems.stream()
                 .mapToInt(OrderItem::getPrice)
                 .sum();
+
+        // 총 수량 계산
+
+        int totalQuantity = orderItems.stream()
+                .mapToInt(OrderItem::getQuantity)
+                .sum();
+
+        String productName = orderItems.stream()
+                .map(item -> item.getProduct().getProductName())
+                .collect(Collectors.joining(", "));
 
         Order order = Order.builder()
                 .orderDate(LocalDateTime.now())
                 .orderItems(orderItems)
                 .totalPrice(totalPrice)
-                .orderStatus(OrderStatus.PENDING)
-                .paymentStatus(PaymentStatus.PENDING)
+                .productName(productName)
+                .quantity(totalQuantity)
+                .orderStatus(OrderStatus.COMPLETED)
+                .paymentStatus(PaymentStatus.APPROVED)
                 .build();
 
         for (OrderItem orderItem : orderItems) {
             orderItem.setOrder(order);
         }
 
+
         order = orderRepository.save(order);
 
         return OrderResponseDTO.builder()
                 .orderId(order.getOrderId())
                 .totalPrice(order.getTotalPrice())
+                .productName(order.getProductName())
+                .quantity(order.getQuantity())
                 .orderStatus(order.getOrderStatus().name())
                 .paymentStatus(order.getPaymentStatus().name())
+                .orderDate(order.getOrderDate())
                 .orderItems(order.getOrderItems().stream()
                         .map(item -> OrderItemDTO.builder()
                                 .productId(item.getProduct().getProductId())
                                 .quantity(item.getQuantity())
+                                .productName(item.getProduct().getProductName())
                                 .build())
                         .collect(Collectors.toList()))
                 .build();
@@ -89,23 +108,57 @@ public class OrderService {
     // 모든 주문 조회
     @Transactional(readOnly = true)
     public List<OrderResponseDTO> getAllOrders() {
-        return queryFactory.selectFrom(order)
-                .fetch()
-                .stream()
+        List<Order> orders = queryFactory
+                .selectFrom(order)
+                .leftJoin(order.orderItems, orderItem).fetchJoin()
+                .leftJoin(orderItem.product, product).fetchJoin()
+                .fetch();
+
+        return orders.stream()
                 .map(o -> OrderResponseDTO.builder()
                         .orderId(o.getOrderId())
                         .totalPrice(o.getTotalPrice())
+                        .productName(o.getProductName()) // 상품 이름 포함
+                        .quantity(o.getQuantity()) // 총 수량 포함
                         .orderStatus(o.getOrderStatus().name())
                         .paymentStatus(o.getPaymentStatus().name())
+                        .orderDate(o.getOrderDate())
                         .orderItems(o.getOrderItems().stream()
                                 .map(item -> OrderItemDTO.builder()
                                         .productId(item.getProduct().getProductId())
                                         .quantity(item.getQuantity())
+                                        .productName(item.getProduct().getProductName()) // 상품 이름 추가
                                         .build())
                                 .collect(Collectors.toList()))
                         .build())
                 .collect(Collectors.toList());
     }
+
+
+    @Transactional(readOnly = true)
+    public List<OrderResponseDTO> getOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        List<Order> orders = orderRepository.findAllByOrderDateBetween(startDate, endDate);
+
+        return orders.stream()
+                .map(o -> OrderResponseDTO.builder()
+                        .orderId(o.getOrderId())
+                        .totalPrice(o.getTotalPrice())
+                        .productName(o.getProductName())
+                        .quantity(o.getQuantity())
+                        .orderStatus(o.getOrderStatus().name())
+                        .paymentStatus(o.getPaymentStatus().name())
+                        .orderDate(o.getOrderDate())
+                        .orderItems(o.getOrderItems().stream()
+                                .map(item -> OrderItemDTO.builder()
+                                        .productId(item.getProduct().getProductId())
+                                        .quantity(item.getQuantity())
+                                        .productName(item.getProduct().getProductName())
+                                        .build())
+                                .collect(Collectors.toList()))
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 }
 
 

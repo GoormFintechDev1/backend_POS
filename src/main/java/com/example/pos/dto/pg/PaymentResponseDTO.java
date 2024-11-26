@@ -1,11 +1,14 @@
 package com.example.pos.dto.pg;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PaymentResponseDTO {
   private String paymentKey; // 결제 키
   private String orderId; // 주문 ID
@@ -20,4 +23,7 @@ public class PaymentResponseDTO {
   private Long vat; // 부가세
   private String method; // 결제 방식 (ex. 카드, 간편결제 등)
   private String failReason;
+
+  private String mId; // Merchant ID
+
 }

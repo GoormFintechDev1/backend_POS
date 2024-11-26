@@ -10,4 +10,5 @@ import lombok.*;
 public class OrderItemDTO {
     private Long productId;
     private int quantity;
+    private String productName;
 }

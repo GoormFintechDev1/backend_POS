@@ -33,6 +33,12 @@ public class Order {
     @Column(name = "total_price", nullable = false)
     private int totalPrice;
 
+    @Column(name = "product_name", nullable = false)
+    private String productName;
+
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status", nullable = false)
     private OrderStatus orderStatus; // 주문 상태
