@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -49,6 +50,7 @@ public class OrderController {
         log.info("Fetched {} orders for date range: {}", orders.size(), dateRange);
         return orders;
     }
+
 
     @PostMapping("/send-to-backend")
     public ResponseEntity<?> sendOrdersToBackend(@RequestBody DateRangeRequestDTO dateRange) {

@@ -1,5 +1,7 @@
 package com.example.pos.dto.pos;
 
+import com.example.pos.model.enumset.OrderStatus;
+import com.example.pos.model.enumset.PaymentStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -19,4 +21,5 @@ public class OrderResponseDTO {
     private LocalDateTime orderDate;
     private String orderStatus;
     private String paymentStatus;
+    private Long posId;
 }

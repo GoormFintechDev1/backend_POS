@@ -38,6 +38,19 @@ public class OrderService {
 
     // 주문 생성
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO) {
+
+        Pos pos;
+        if (orderRequestDTO.getPosId() != null) {
+            // 프론트에서 POS ID가 전달된 경우
+            pos = posRepository.findById(orderRequestDTO.getPosId())
+                    .orElseThrow(() -> new IllegalArgumentException("POS를 찾을 수 없습니다."));
+        } else {
+            // 프론트에서 POS ID가 없을 경우 기본 POS 설정
+            pos = posRepository.findById(1L)
+                    .orElseThrow(() -> new IllegalArgumentException("기본 POS를 찾을 수 없습니다."));
+        }
+
+
         List<OrderItem> orderItems = orderRequestDTO.getOrderItems().stream()
                 .map(item -> {
                     Product productEntity = queryFactory.selectFrom(product)
@@ -68,8 +81,6 @@ public class OrderService {
                 .mapToInt(OrderItem::getQuantity)
                 .sum();
 
-        Pos pos = posRepository.findById(orderRequestDTO.getPosId())
-                .orElseThrow(() -> new IllegalArgumentException("POS를 찾을 수 없음"));
 
         String productName = orderItems.stream()
                 .map(item -> item.getProduct().getProductName())
@@ -84,6 +95,7 @@ public class OrderService {
                 .quantity(totalQuantity)
                 .orderStatus(OrderStatus.COMPLETED)
                 .paymentStatus(PaymentStatus.APPROVED)
+                .pos(pos)
                 .build();
 
         for (OrderItem orderItem : orderItems) {
@@ -129,6 +141,7 @@ public class OrderService {
                         .orderStatus(o.getOrderStatus().name())
                         .paymentStatus(o.getPaymentStatus().name())
                         .orderDate(o.getOrderDate())
+                        .posId(o.getPos().getPosId())
                         .orderItems(o.getOrderItems().stream()
                                 .map(item -> OrderItemDTO.builder()
                                         .productId(item.getProduct().getProductId())
