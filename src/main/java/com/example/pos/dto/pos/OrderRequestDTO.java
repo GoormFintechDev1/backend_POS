@@ -12,5 +12,6 @@ import java.util.List;
 public class OrderRequestDTO {
     private Long orderId;
     private List<OrderItemDTO> orderItems;
+    private Long posId;
 
 }

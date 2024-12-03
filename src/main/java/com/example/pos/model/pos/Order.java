@@ -47,5 +47,8 @@ public class Order {
     @Column(name = "payment_status", nullable = false)
     private PaymentStatus paymentStatus; // 결제 상태
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pos_id", nullable = false)
+    private Pos pos;
 
 }

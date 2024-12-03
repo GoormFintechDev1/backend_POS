@@ -3,13 +3,14 @@ package com.example.pos.service.pos;
 import com.example.pos.dto.pos.OrderItemDTO;
 import com.example.pos.dto.pos.OrderRequestDTO;
 import com.example.pos.dto.pos.OrderResponseDTO;
-import com.example.pos.dto.pos.SalesReportDTO;
 import com.example.pos.model.enumset.OrderStatus;
 import com.example.pos.model.enumset.PaymentStatus;
 import com.example.pos.model.pos.Order;
 import com.example.pos.model.pos.OrderItem;
+import com.example.pos.model.pos.Pos;
 import com.example.pos.model.pos.Product;
 import com.example.pos.repository.pos.OrderRepository;
+import com.example.pos.repository.pos.PosRepository;
 import com.example.pos.repository.pos.ProductRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final JPAQueryFactory queryFactory;
+    private final PosRepository posRepository;
 
 
     // 주문 생성
@@ -66,9 +68,13 @@ public class OrderService {
                 .mapToInt(OrderItem::getQuantity)
                 .sum();
 
+        Pos pos = posRepository.findById(orderRequestDTO.getPosId())
+                .orElseThrow(() -> new IllegalArgumentException("POS를 찾을 수 없음"));
+
         String productName = orderItems.stream()
                 .map(item -> item.getProduct().getProductName())
                 .collect(Collectors.joining(", "));
+
 
         Order order = Order.builder()
                 .orderDate(LocalDateTime.now())
