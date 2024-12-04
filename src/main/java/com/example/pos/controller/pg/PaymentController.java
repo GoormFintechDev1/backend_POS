@@ -66,13 +66,22 @@ public class PaymentController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<List<PaymentResponseDTO>> getPaymentsByDateRange(@RequestBody DateRangeRequestDTO dateRange) {
-        if (dateRange.getStartDate() == null || dateRange.getEndDate() == null || dateRange.getStartDate().isAfter(dateRange.getEndDate())) {
-            return ResponseEntity.badRequest().body(null);
-        }
-
-        List<PaymentResponseDTO> payments = paymentService.getPaymentsByDateRange(dateRange.getStartDate(), dateRange.getEndDate());
+    public ResponseEntity<List<PaymentResponseDTO>> getAllPayments() {
+        List<PaymentResponseDTO> payments = paymentService.getAllPayments();
         return ResponseEntity.ok(payments);
     }
+
+
+
+
+//    @PostMapping("/send")
+//    public ResponseEntity<List<PaymentResponseDTO>> getPaymentsByDateRange(@RequestBody DateRangeRequestDTO dateRange) {
+//        if (dateRange.getStartDate() == null || dateRange.getEndDate() == null || dateRange.getStartDate().isAfter(dateRange.getEndDate())) {
+//            return ResponseEntity.badRequest().body(null);
+//        }
+//
+//        List<PaymentResponseDTO> payments = paymentService.getPaymentsByDateRange(dateRange.getStartDate(), dateRange.getEndDate());
+//        return ResponseEntity.ok(payments);
+//    }
 
 }

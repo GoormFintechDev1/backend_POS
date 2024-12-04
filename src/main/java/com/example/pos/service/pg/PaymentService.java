@@ -63,6 +63,30 @@ public class PaymentService {
                 .collect(Collectors.toList());
     }
 
+    public List<PaymentResponseDTO> getAllPayments() {
+        List<Payment> payments = paymentRepository.findAll();
+
+        return payments.stream()
+                .map(payment -> PaymentResponseDTO.builder()
+                        .paymentKey(payment.getPaymentKey())
+                        .orderId(payment.getOrderId())
+                        .orderName(payment.getOrderName())
+                        .requestedAt(payment.getRequestedAt())
+                        .approvedAt(payment.getApprovedAt())
+                        .provider(payment.getProvider())
+                        .easyPayAmount(payment.getEasyPayAmount())
+                        .easyPayDiscountAmount(payment.getEasyPayDiscountAmount())
+                        .currency(payment.getCurrency())
+                        .totalAmount(payment.getTotalAmount())
+                        .vat(payment.getVat())
+                        .method(payment.getMethod())
+                        .failReason(payment.isPaySuccessYN() ? null : "Payment failed")
+                        .mId(null) // Merchant ID (필요 시 설정)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+
 
 
 
