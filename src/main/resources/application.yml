@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8083
 
 spring:
   datasource:
@@ -8,9 +8,15 @@ spring:
     password: 1234
     driver-class-name: org.mariadb.jdbc.Driver
 
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -24,3 +30,13 @@ logging:
     root: INFO
     org.hibernate.SQL: DEBUG
 
+bank:
+  api:
+    url:
+      orders: http://localhost:8083/api/bank-transfer/orders
+      payments: http://localhost:8083/api/bank-transfer/payments
+
+backend:
+  api:
+    url:
+      pos-sales: http://localhost:8080/api/pos-sales/save
