@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mariadb://localhost:3306/pos_db
-    username: root
-    password: 1234
+    url: jdbc:mariadb://${DATABASE_HOST:localhost}/pos_db
+    username: ${DATABASE_USERNAME:root}
+    password: ${DATABASE_PASSWORD:1234}
     driver-class-name: org.mariadb.jdbc.Driver
 
   data:
@@ -33,10 +33,10 @@ logging:
 bank:
   api:
     url:
-      orders: http://localhost:8083/api/bank-transfer/orders
-      payments: http://localhost:8083/api/bank-transfer/payments
+      orders: http://${BANK_API_HOST:localhost}:8083/api/bank-transfer/orders
+      payments: http://${BANK_API_HOST:localhost}:8083/api/bank-transfer/payments
 
 backend:
   api:
     url:
-      pos-sales: http://localhost:8080/api/pos-sales/save
+      pos-sales: http://${BACKEND_API_HOST:localhost}:8080/api/pos-sales/save
