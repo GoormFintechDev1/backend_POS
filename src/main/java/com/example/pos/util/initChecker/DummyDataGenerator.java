@@ -35,6 +35,12 @@ public class DummyDataGenerator {
 
     @PostConstruct
     public void generateDummyData() {
+        // 주문 데이터가 이미 존재하면 데이터 생성을 건너뛰기
+        if (orderRepository.count() > 0) {
+            System.out.println("주문 데이터가 이미 존재합니다. 더 이상 생성하지 않습니다.");
+            return;
+        }
+
         List<Pos> posList = posRepository.findAll(); // POS 데이터 로드
 
         for (Pos pos : posList) {
@@ -49,7 +55,8 @@ public class DummyDataGenerator {
     }
 
     private void generateMonthlyOrders(Pos pos, int month) {
-        int totalSalesTarget = random.nextInt(300_000) + 600_000; // 600만 ~ 900만 랜덤
+        // 500만 원 ~ 800만 원 범위로 설정
+        int totalSalesTarget = random.nextInt(3_000_001) + 5_000_000; // 500만 ~ 800만
         int totalSales = 0;
 
         while (totalSales < totalSalesTarget) {
