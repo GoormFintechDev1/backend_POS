@@ -23,7 +23,7 @@ spring:
         format_sql: true
 
   security:
-    enabled:false
+    enabled: false
 
 logging:
   level:
@@ -33,10 +33,10 @@ logging:
 bank:
   api:
     url:
-      orders: http://${BANK_API_HOST:localhost}:8083/api/bank-transfer/orders
-      payments: http://${BANK_API_HOST:localhost}:8083/api/bank-transfer/payments
+      orders: http://${BANK_HOST:localhost}:8083/api/bank-transfer/orders
+      payments: http://${BANK_HOST:localhost}:8083/api/bank-transfer/payments
 
 backend:
   api:
     url:
-      pos-sales: http://${BACKEND_API_HOST:localhost}:8080/api/pos-sales/save
+      pos-sales: http://${BACKEND_HOST:localhost}/api/pos-sales/save
