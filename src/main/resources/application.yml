@@ -32,11 +32,9 @@ logging:
 
 bank:
   api:
-    url:
-      orders: http://${BANK_HOST:localhost}:8083/api/bank-transfer/orders
-      payments: http://${BANK_HOST:localhost}:8083/api/bank-transfer/payments
+    url: http://${BANK_HOST:localhost}:${BANK_PORT:8083}
 
-backend:
-  api:
-    url:
-      pos-sales: http://${BACKEND_HOST:localhost}/api/pos-sales/save
+# backend:
+#   api:
+#     url:
+#       pos-sales: http://${BACKEND_HOST:localhost}/api/pos-sales/save

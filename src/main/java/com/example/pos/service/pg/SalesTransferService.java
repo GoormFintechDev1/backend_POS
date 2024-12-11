@@ -17,8 +17,8 @@ import java.util.List;
 public class SalesTransferService {
     private final WebClient webClient;
 
-    @Value("${backend.api.url.pos-sales}")
-    private String posSalesUrl;
+    @Value("${backend.api.url}")
+    private String posUrl;
 
     public void sendOrdersToBackend(List<OrderResponseDTO> orders) {
         log.info("Preparing to send {} orders to backend", orders.size());
@@ -31,7 +31,7 @@ public class SalesTransferService {
 
             // WebClient로 POST 요청 전송
             String response = webClient.post()
-                    .uri(posSalesUrl)
+                    .uri(posUrl + "/api/bank-transfer/orders")
                     .bodyValue(salesRequests) // 요청 본문에 변환된 데이터를 포함
                     .retrieve()
                     .bodyToMono(String.class)
