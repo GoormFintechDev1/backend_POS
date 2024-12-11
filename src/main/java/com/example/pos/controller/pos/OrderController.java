@@ -1,17 +1,20 @@
 package com.example.pos.controller.pos;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.pos.dto.pg.DateRangeRequestDTO;
 import com.example.pos.dto.pos.OrderRequestDTO;
 import com.example.pos.dto.pos.OrderResponseDTO;
-import com.example.pos.service.pg.SalesTransferService;
 import com.example.pos.service.pos.OrderService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -19,7 +22,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/orders")
 public class OrderController {
     private final OrderService orderService;
-    private final SalesTransferService salesTransferService;
 
     @PostMapping("/create")
     public OrderResponseDTO createOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
@@ -52,27 +54,27 @@ public class OrderController {
     }
 
 
-    @PostMapping("/send-to-backend")
-    public ResponseEntity<?> sendOrdersToBackend(@RequestBody DateRangeRequestDTO dateRange) {
-        log.info("Request received to send orders to backend for date range: {}", dateRange);
+    // @PostMapping("/send-to-backend")
+    // public ResponseEntity<?> sendOrdersToBackend(@RequestBody DateRangeRequestDTO dateRange) {
+    //     log.info("Request received to send orders to backend for date range: {}", dateRange);
 
-        if (dateRange.getStartDate() == null || dateRange.getEndDate() == null ||
-                dateRange.getStartDate().isAfter(dateRange.getEndDate())) {
-            log.warn("Invalid date range provided: {}", dateRange);
-            return ResponseEntity.badRequest().body("Invalid date range.");
-        }
+    //     if (dateRange.getStartDate() == null || dateRange.getEndDate() == null ||
+    //             dateRange.getStartDate().isAfter(dateRange.getEndDate())) {
+    //         log.warn("Invalid date range provided: {}", dateRange);
+    //         return ResponseEntity.badRequest().body("Invalid date range.");
+    //     }
 
-        List<OrderResponseDTO> orders = orderService.getOrdersByDateRange(dateRange.getStartDate(), dateRange.getEndDate());
-        log.info("Fetched {} orders for backend transfer", orders.size());
+    //     List<OrderResponseDTO> orders = orderService.getOrdersByDateRange(dateRange.getStartDate(), dateRange.getEndDate());
+    //     log.info("Fetched {} orders for backend transfer", orders.size());
 
-        if (orders.isEmpty()) {
-            log.warn("No orders found for the specified date range: {}", dateRange);
-            return ResponseEntity.ok("No orders to send for the specified date range.");
-        }
+    //     if (orders.isEmpty()) {
+    //         log.warn("No orders found for the specified date range: {}", dateRange);
+    //         return ResponseEntity.ok("No orders to send for the specified date range.");
+    //     }
 
-        salesTransferService.sendOrdersToBackend(orders);
+    //     salesTransferService.sendOrdersToBackend(orders);
 
-        log.info("Orders successfully sent to backend.");
-        return ResponseEntity.ok("Orders successfully sent to backend.");
-    }
+    //     log.info("Orders successfully sent to backend.");
+    //     return ResponseEntity.ok("Orders successfully sent to backend.");
+    // }
 }
